@@ -155,6 +155,37 @@ public class InvoiceDetailMain {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         InvoiceManager invoiceManager = new InvoiceManager();
+
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+        try {
+            invoiceManager.addInvoice(new Payment_Invoice(
+                    "John Doe",
+                    "Alice Smith",
+                    "INV001",
+                    sdf.parse("15/11/2024"),
+                    500.0,
+                    "Credit Card"
+            ));
+            invoiceManager.addInvoice(new Payment_Invoice(
+                    "Jane Roe",
+                    "Bob Brown",
+                    "INV002",
+                    sdf.parse("16/11/2024"),
+                    300.0,
+                    "Cash"
+            ));
+            invoiceManager.addInvoice(new Payment_Invoice(
+                    "John Doe",
+                    "Charlie Green",
+                    "INV003",
+                    sdf.parse("17/11/2024"),
+                    450.0,
+                    "Bank Transfer"
+            ));
+        } catch (ParseException e) {
+            System.out.println("Error parsing default dates.");
+        }
+
         int choice;
 
         do {
@@ -164,7 +195,7 @@ public class InvoiceDetailMain {
             System.out.println("3. Update Invoice");
             System.out.println("4. Search Invoice");
             System.out.println("5. Display All Invoices");
-            System.out.println("6. Exit");
+            System.out.println("6. Back to Main");
             System.out.print("Enter your choice: ");
             choice = scanner.nextInt();
             scanner.nextLine();
@@ -179,7 +210,6 @@ public class InvoiceDetailMain {
                     String invoiceNumber = scanner.nextLine();
                     System.out.print("Enter Payment Date (dd/MM/yyyy): ");
                     String paymentDateStr = scanner.nextLine();
-                    SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
                     Date paymentDate;
                     try {
                         paymentDate = sdf.parse(paymentDateStr);
@@ -208,10 +238,9 @@ public class InvoiceDetailMain {
                     String updateInvoiceNumber = scanner.nextLine();
                     System.out.print("Enter New Payment Date (dd/MM/yyyy): ");
                     String newPaymentDateStr = scanner.nextLine();
-                    SimpleDateFormat nsdf = new SimpleDateFormat("dd/MM/yyyy");
                     Date newPaymentDate;
                     try {
-                        newPaymentDate = nsdf.parse(newPaymentDateStr);
+                        newPaymentDate = sdf.parse(newPaymentDateStr);
                     } catch (ParseException e) {
                         System.out.println("Invalid date format. Please use dd/MM/yyyy.");
                         continue;
@@ -236,7 +265,7 @@ public class InvoiceDetailMain {
                     break;
 
                 case 6:
-                    System.out.println("Exiting Invoice Management.");
+                    System.out.println("Returning to Main.");
                     break;
 
                 default:
@@ -245,6 +274,5 @@ public class InvoiceDetailMain {
 
         } while (choice != 6);
 
-        scanner.close();
     }
 }

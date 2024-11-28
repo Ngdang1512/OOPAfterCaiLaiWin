@@ -148,6 +148,30 @@ public class UserMain {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         UserManager userManager = new UserManager();
+
+        userManager.addUser(new Customers("customer1", "Alice") {});
+        userManager.addUser(new Customers("customer2", "Bob") {});
+        userManager.addUser(new Staff("staff1", "Charlie") {
+            @Override
+            public void addProduct() {}
+            @Override
+            public void updateProduct() {}
+            @Override
+            public void removeProduct() {}
+            @Override
+            public void searchProduct() {}
+        });
+        userManager.addUser(new Staff("staff2", "Diana") {
+            @Override
+            public void addProduct() {}
+            @Override
+            public void updateProduct() {}
+            @Override
+            public void removeProduct() {}
+            @Override
+            public void searchProduct() {}
+        });
+
         int choice;
 
         do {
@@ -157,7 +181,7 @@ public class UserMain {
             System.out.println("3. Update User");
             System.out.println("4. Search User");
             System.out.println("5. Display All Users");
-            System.out.println("6. Exit");
+            System.out.println("6. Back to Main");
             System.out.print("Enter your choice: ");
             choice = scanner.nextInt();
             scanner.nextLine();
@@ -201,7 +225,7 @@ public class UserMain {
                     break;
 
                 case 6:
-                    System.out.println("Exiting User Management.");
+                    System.out.println("Returning to Main...");
                     break;
 
                 default:
@@ -210,6 +234,5 @@ public class UserMain {
 
         } while (choice != 6);
 
-        scanner.close();
     }
 }

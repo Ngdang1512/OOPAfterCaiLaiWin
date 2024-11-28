@@ -1,7 +1,6 @@
 package oop;
 
 import java.io.*;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -199,6 +198,11 @@ public class ProductMain {
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
         ProductManager productManager = new ProductManager();
+
+        productManager.addProduct(new Racket(1, "Yonex Astrox 88D", 200.0, 10, "Yonex", "3U/G5"));
+        productManager.addProduct(new Shoes(2, "Adidas Court Team Bounce", 120.0, 15, "Adidas", 42));
+        productManager.addProduct(new Clothing(3, "Victor T-Shirt", 25.0, 50, "Victor", 38, "Unisex"));
+
         int choice;
 
         do {
@@ -208,7 +212,7 @@ public class ProductMain {
             System.out.println("3. Update Product");
             System.out.println("4. Search Product");
             System.out.println("5. Display All Products");
-            System.out.println("6. Exit");
+            System.out.println("6. Back to Main");
             System.out.print("Enter your choice: ");
             choice = scanner.nextInt();
             scanner.nextLine();
@@ -266,7 +270,7 @@ public class ProductMain {
                     break;
 
                 case 6:
-                    System.out.println("Exiting Product Management.");
+                    System.out.println("returning to Main...");
                     break;
 
                 default:
@@ -275,6 +279,5 @@ public class ProductMain {
 
         } while (choice != 6);
 
-        scanner.close();
     }
 }

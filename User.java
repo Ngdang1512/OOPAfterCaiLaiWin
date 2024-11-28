@@ -1,8 +1,12 @@
+package oop;
+
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
 abstract class User {
-    protected  String userName;
+    protected String userName;
 
     public User(String userName) {
         this.userName = userName;
@@ -56,22 +60,44 @@ abstract class Staff extends User {
     abstract void searchProduct();
 }
 
-class UserManager {
-    private List<User> userList;
+class UserManager implements iDataManagement<User> {
+    private List<User> users;
 
     public UserManager() {
-        userList = new ArrayList<>();
+        users = new ArrayList<>();
+    }
+
+    @Override
+    public List<User> readDataFromFile(String filePath) {
+        List<User> loadedUsers = new ArrayList<>();
+        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(filePath))) {
+            loadedUsers = (List<User>) ois.readObject();
+            System.out.println("Users successfully loaded from file.");
+        } catch (IOException | ClassNotFoundException e) {
+            System.out.println("Error reading users from file: " + e.getMessage());
+        }
+        return loadedUsers;
+    }
+
+    @Override
+    public void writeDataToFile(String filePath, List<User> data) {
+        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(filePath))) {
+            oos.writeObject(data);
+            System.out.println("Users successfully saved to file.");
+        } catch (IOException e) {
+            System.out.println("Error writing users to file: " + e.getMessage());
+        }
     }
 
     public void addUser(User user) {
-        userList.add(user);
+        users.add(user);
         System.out.println("User added: " + user.getUserName());
     }
 
     public void removeUser(String userName) {
-        for (User user : userList) {
+        for (User user : users) {
             if (user.getUserName().equals(userName)) {
-                userList.remove(user);
+                users.remove(user);
                 System.out.println("User removed: " + user.getUserName());
                 return;
             }
@@ -80,7 +106,7 @@ class UserManager {
     }
 
     public void updatedUser(String userName, String newUserName, String newCustomerName, String newStaffName) {
-        for (User user : userList) {
+        for (User user : users) {
             if (user.getUserName().equals(userName)) {
                 user.userName = newUserName;
 
@@ -98,7 +124,7 @@ class UserManager {
     }
 
     public void searchUser(String userName) {
-        for (User user : userList) {
+        for (User user : users) {
             if (user.getUserName().equals(userName)) {
                 System.out.println("User Founded: " + user.getUserName());
             }
@@ -107,7 +133,7 @@ class UserManager {
     }
 
     public void displayAllUser() {
-        for (User user : userList) {
+        for (User user : users) {
             if (user instanceof Customers) {
                 ((Customers) user).displayCustomers();
             } else if (user instanceof Staff) {

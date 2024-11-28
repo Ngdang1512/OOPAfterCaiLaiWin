@@ -1,3 +1,6 @@
+package oop;
+
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -18,9 +21,9 @@ class Invoice_Details {
 }
 
 class Payment_Invoice extends Invoice_Details {
-    private String invoiceNumber;
+    protected String invoiceNumber;
     protected Date paymentDate;
-    protected static double  totalPaymentAmount;
+    protected static double totalPaymentAmount;
     protected String paymentMethod;
 
     public Payment_Invoice(String staffName, String userName, String invoiceNumber, Date paymentDate, double totalPaymentAmount, String paymentMethod) {
@@ -39,7 +42,7 @@ class Payment_Invoice extends Invoice_Details {
         this.invoiceNumber = invoiceNumber;
     }
 
-    public void generataInvoice() {
+    public void generateInvoice() {
         System.out.println("Invoice Number: " + invoiceNumber);
         System.out.println("Payment Date: " + paymentDate);
         System.out.println("Total Payment Amount: " + totalPaymentAmount);
@@ -68,11 +71,33 @@ class Payment_Invoice extends Invoice_Details {
     }
 }
 
-class InvoiceManager {
+class InvoiceManager implements iDataManagement<Payment_Invoice> {
     private List<Payment_Invoice> invoices;
 
-    public void InvoiceManager() {
+    public InvoiceManager() {
         invoices = new ArrayList<>();
+    }
+
+    @Override
+    public List<Payment_Invoice> readDataFromFile(String filePath) {
+        List<Payment_Invoice> loadedInvoices = new ArrayList<>();
+        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(filePath))) {
+            loadedInvoices = (List<Payment_Invoice>) ois.readObject();
+            System.out.println("Invoice successfully loaded from file.");
+        } catch (IOException | ClassNotFoundException e) {
+            System.out.println("Error reading invoices from file: " + e.getMessage());
+        }
+        return loadedInvoices;
+    }
+
+    @Override
+    public void writeDataToFile(String filePath, List<Payment_Invoice> data) {
+        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(filePath))) {
+            oos.writeObject(data);
+            System.out.println("Invoice successfully saved to file.");
+        } catch (IOException e) {
+            System.out.println("Error writing invoices to file: " + e.getMessage());
+        }
     }
 
     public void addInvoice(Payment_Invoice invoice) {
@@ -81,17 +106,17 @@ class InvoiceManager {
     }
 
     public void removeInvoice(String invoiceNumber) {
-        for (Payment_Invoice invoice : invoices) {
-            if (invoice.getInvoiceNumber().equals(invoiceNumber)) {
-                invoices.remove(invoice);
-                System.out.println("Invoice Removed: " + invoice.getInvoiceNumber());
+        for (int i = 0; i < invoices.size(); i++) {
+            if (invoices.get(i).getInvoiceNumber().equals(invoiceNumber)) {
+                System.out.println("Invoice Removed: " + invoices.get(i).getInvoiceNumber());
+                invoices.remove(i);
                 return;
             }
         }
         System.out.println("Invoice with Number " + invoiceNumber + " Not Found");
     }
 
-    public void updateInvoice(String invoiceNumber, Date paymentDate, double totalPaymentAmount, String paymentMethod) {
+    public void updatedInvoice(String invoiceNumber, Date paymentDate, double totalPaymentAmount, String paymentMethod) {
         for (Payment_Invoice invoice : invoices) {
             if (invoice.getInvoiceNumber().equals(invoiceNumber)) {
                 invoice.setInvoiceNumber(invoiceNumber);
@@ -116,7 +141,7 @@ class InvoiceManager {
     }
 
     public void displayAllInvoice() {
-        for (Invoice_Details invoice : invoices) {
+        for (Payment_Invoice invoice : invoices) {
             invoice.displayInvoice();
             System.out.println("---------------");
         }

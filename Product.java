@@ -1,5 +1,10 @@
+package oop;
+
+import java.io.*;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
 class Product {
     private int id;
@@ -113,11 +118,33 @@ class Clothing extends Product {
     }
 }
 
-class ProductManager {
+class ProductManager implements iDataManagement<Product> {
     private List<Product> products;
 
     public ProductManager() {
         products = new ArrayList<>();
+    }
+
+    @Override
+    public List<Product> readDataFromFile(String filePath) {
+        List<Product> loadedProducts = new ArrayList<>();
+        try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(filePath))) {
+            loadedProducts = (List<Product>) ois.readObject();
+            System.out.println("Products successfully loaded from file.");
+        } catch (IOException | ClassNotFoundException e) {
+            System.out.println("Error reading products from file: " + e.getMessage());
+        }
+        return loadedProducts;
+    }
+
+    @Override
+    public void writeDataToFile(String filePath, List<Product> data) {
+        try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(filePath))) {
+            oos.writeObject(data);
+            System.out.println("Products successfully written to file.");
+        } catch (IOException e) {
+            System.out.println("Error writing products to file: " + e.getMessage());
+        }
     }
 
     public void addProduct(Product product) {
@@ -136,7 +163,7 @@ class ProductManager {
         System.out.println("Product with ID: " + id + " Not Found.");
     }
 
-    public void updateProduct(int id, String name, double price, int quantity, String brand) {
+    public void updatedProduct(int id, String name, double price, int quantity, String brand) {
         for (Product product : products) {
             if (product.getId() == id) {
                 product.setName(name);

@@ -81,7 +81,7 @@ class InvoiceManager implements iDataManagement<Payment_Invoice> {
         invoices = new ArrayList<>();
     }
 
-    @Override
+    @SuppressWarnings("unchecked")
     public List<Payment_Invoice> readDataFromFile(String filePath) {
         List<Payment_Invoice> loadedInvoices = new ArrayList<>();
         try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(filePath))) {

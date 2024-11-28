@@ -67,7 +67,7 @@ class UserManager implements iDataManagement<User> {
         users = new ArrayList<>();
     }
 
-    @Override
+    @SuppressWarnings("unchecked")
     public List<User> readDataFromFile(String filePath) {
         List<User> loadedUsers = new ArrayList<>();
         try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(filePath))) {
